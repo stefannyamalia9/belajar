@@ -64,6 +64,7 @@ class HomeController extends Controller
             $grandtotal = $r->grandtotal;
 
             $order = Order::create([
+                'user_id'   => Auth::user()->id,
                 'customer' => $customer,
                 'transaksi' => $tanggal,
                 'grand_total' => $grandtotal,
@@ -98,6 +99,7 @@ class HomeController extends Controller
     {
         $data = Order::query()
             ->withCount('detail')
+            ->where('user_id', Auth::user()->id)
             ->orderBy('id', 'desc')
             ->addSelect(DB::raw('ROW_NUMBER() OVER(ORDER BY id DESC) AS nomor'))
             ->simplePaginate(15);
